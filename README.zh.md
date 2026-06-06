@@ -138,6 +138,46 @@ $fmri-followup 监测一下 / 看看进度
 
 配置使用 `shared`、`fmriprep`、`xcpd` 三个 section。一次具体请求只填当前目标需要的 section；比如只跑 fMRIPrep 时填 `shared` 和 `fmriprep`，不要同时填完整的 `xcpd`。
 
+你也可以直接粘贴以前跑过的容器命令，让 agent 帮你翻译，而不是自己手动改写。例如：
+
+```text
+$fmri-process 把这个旧 fMRIPrep 命令翻译成本项目的 CLI 请求，然后先审查：
+
+apptainer run --cleanenv \
+  -B /data/ds001:/data:ro \
+  -B /data/derivatives:/out \
+  -B /scratch/fmriprep_work:/work \
+  -B /opt/freesurfer/license.txt:/license.txt:ro \
+  docker://nipreps/fmriprep:25.2.5 \
+  /data /out participant \
+  --participant-label 001 \
+  --fs-license-file /license.txt \
+  --work-dir /work \
+  --output-spaces MNI152NLin2009cAsym:res-2 \
+  --cifti-output 91k \
+  --nthreads 8 \
+  --omp-nthreads 8
+```
+
+agent 应该抽取主机侧路径和参数，然后构造等价的显式请求，例如：
+
+```bash
+python -m fmri_process.cli process \
+  --bids-root /data/ds001 \
+  --output-root /data/derivatives \
+  --subject 001 \
+  --fs-license /opt/freesurfer/license.txt \
+  --work-root /scratch/fmriprep_work \
+  --fmriprep-image docker://nipreps/fmriprep:25.2.5 \
+  --container-runtime apptainer \
+  --output-spaces MNI152NLin2009cAsym:res-2 \
+  --cifti-output 91k \
+  --nthreads-per-job 8 \
+  --omp-nthreads 8
+```
+
+这种翻译不会绕过 harness。agent 仍然会先审查数据集和运行环境，报告 blockers 和 warnings，并在执行前暂停，除非你明确授权运行。
+
 常见说法和默认行为：
 
 | 用户口谕 | 默认行为 |

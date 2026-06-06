@@ -139,6 +139,46 @@ The repository includes two examples:
 
 The config file uses three sections: `shared`, `fmriprep`, and `xcpd`. For a specific request, fill only the sections needed for the current target. For example, when running only fMRIPrep, fill `shared` and `fmriprep`; do not also fill a complete `xcpd` section.
 
+You can also paste an old container command and ask the agent to translate it instead of rewriting it yourself. For example:
+
+```text
+$fmri-process Translate this old fMRIPrep command into this skill's CLI request, then audit first:
+
+apptainer run --cleanenv \
+  -B /data/ds001:/data:ro \
+  -B /data/derivatives:/out \
+  -B /scratch/fmriprep_work:/work \
+  -B /opt/freesurfer/license.txt:/license.txt:ro \
+  docker://nipreps/fmriprep:25.2.5 \
+  /data /out participant \
+  --participant-label 001 \
+  --fs-license-file /license.txt \
+  --work-dir /work \
+  --output-spaces MNI152NLin2009cAsym:res-2 \
+  --cifti-output 91k \
+  --nthreads 8 \
+  --omp-nthreads 8
+```
+
+The agent should extract host-side paths and options, then build an equivalent explicit request such as:
+
+```bash
+python -m fmri_process.cli process \
+  --bids-root /data/ds001 \
+  --output-root /data/derivatives \
+  --subject 001 \
+  --fs-license /opt/freesurfer/license.txt \
+  --work-root /scratch/fmriprep_work \
+  --fmriprep-image docker://nipreps/fmriprep:25.2.5 \
+  --container-runtime apptainer \
+  --output-spaces MNI152NLin2009cAsym:res-2 \
+  --cifti-output 91k \
+  --nthreads-per-job 8 \
+  --omp-nthreads 8
+```
+
+This translation does not skip the harness. The agent still audits the dataset and runtime, reports blockers and warnings, and pauses before execution unless you explicitly authorize running.
+
 Common requests and default behavior:
 
 | User request | Default behavior |
