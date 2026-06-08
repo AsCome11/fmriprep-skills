@@ -156,7 +156,7 @@ def fmriprep_request_from_artifacts(
         fmriprep_image=optional_text(runtime_signature.get("fmriprep_image")),
         container_runtime=optional_text(runtime_signature.get("container_runtime")) or "auto",
         executor_policy=optional_text(runtime_signature.get("executor_policy")) or "auto",
-        scheduler_partition=request.scheduler_partition or optional_text(runtime_signature.get("scheduler_partition")),
+        scheduler_partition=optional_text(runtime_signature.get("scheduler_partition")),
         nthreads_per_job=_optional_int(runtime_signature.get("nthreads_per_job")),
         omp_nthreads=_optional_int(runtime_signature.get("omp_nthreads")),
         slurm_mem_gb=_optional_int(runtime_signature.get("slurm_mem_gb")),

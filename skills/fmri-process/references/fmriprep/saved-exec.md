@@ -23,8 +23,6 @@ Saved execution uses `run-fmriprep`:
   present.
 - `--resume-from <audit_id|audit_dir|artifact.json>`: required saved snapshot
   selector for execution.
-- `--scheduler-partition <partition>`: optional Slurm partition override for
-  the launch.
 - `--run-id <run-id>`: log grouping key for the new launch only.
 
 ## Boundary
@@ -98,6 +96,8 @@ It must not run fresh audits, run prepare, or clear blockers with current-turn
 runtime overrides. Current-turn arguments may locate the saved snapshot, but
 they must not supply fresh fMRIPrep selectors, output selection, recon mode, or
 typed custom args.
+Slurm partition is also part of the saved runtime audit contract; change it by
+rerunning `runtime-audit` or `process`, not by passing a run-stage override.
 Recon mode is part of the saved artifact contract. If the saved audit was
 created with `--fs-no-reconall`, saved execution replays that mode and does not
 accept a current-turn recon-mode override. It still relies on the saved

@@ -132,7 +132,6 @@ RUN_FMRIPREP_REQUEST_FIELDS = {
     "bids_root",
     "output_root",
     "remote_host",
-    "scheduler_partition",
     "run_id",
 }
 RUN_XCPD_REQUEST_FIELDS = ARTIFACT_LOCATOR_REQUEST_FIELDS | {

@@ -24,7 +24,7 @@ This file covers XCP-D-specific parameter semantics only.
 | `--xcpd-despike <y\|n>` | `xcpd-audit`, `run-xcpd` | XCP-D despike setting. Wrapper default for `abcd` is `y`; omitted for `nichart` unless explicit. |
 | `--reuse-context-from <audit>` | `xcpd-audit` | Seed missing locator/runtime context from a fMRIPrep audit. This never proves XCP-D readiness. |
 | `--resume-from <audit>` | `run-xcpd` | Required saved XCP-D audit selector. Accepts audit id, audit directory, or artifact JSON path. |
-| `--scheduler-partition <partition>` | `xcpd-audit`, `run-xcpd` | Slurm queue override for XCP-D audit/execution. Do not use it to bypass audit-reported constraints. |
+| `--scheduler-partition <partition>` | `xcpd-audit`, `run-xcpd` | Slurm queue selection for the XCP-D runtime audit and saved execution contract. On `run-xcpd`, this is a pinned saved-signature check, not a fresh launch override. |
 | `--run-id <run-id>` | `xcpd-audit`, `run-xcpd` | Log grouping key only. It does not select artifacts. |
 
 If the user supplies YAML config, read [../common/config.md](../common/config.md)

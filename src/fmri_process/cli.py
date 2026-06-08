@@ -657,7 +657,6 @@ def add_run_fmriprep_arguments(sub: argparse.ArgumentParser) -> None:
     sub.add_argument("--output-root", default=argparse.SUPPRESS, help=OUTPUT_ROOT_HELP)
     sub.add_argument("--remote-host", default=argparse.SUPPRESS, help=REMOTE_HOST_HELP)
     sub.add_argument("--resume-from", default=argparse.SUPPRESS, help=RESUME_FROM_HELP)
-    sub.add_argument("--scheduler-partition", default=argparse.SUPPRESS, help=SCHEDULER_PARTITION_HELP)
     sub.add_argument("--run-id", default=argparse.SUPPRESS, help=RUN_ID_HELP)
 
 
