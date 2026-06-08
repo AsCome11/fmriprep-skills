@@ -88,10 +88,22 @@ cp -a skills/fmri-followup ~/.claude/skills/
 其他运行前准备：
 
 - 容器软件：Linux、WSL 和服务器推荐 Apptainer 或 Singularity。Windows 原生环境使用 Docker。
-- `datalad` 和 `git-annex`：用于确认 TemplateFlow 里的模板文件是否已经完整下载。你可以让 agent 帮你安装。
+- `datalad` 和 `git-annex`：用于确认 TemplateFlow 里的模板文件是否已经完整下载。你可以让 agent 帮你安装。建议安装在运行这些 skills 的同一个 conda 环境里。
 - FreeSurfer license：fMRIPrep 中的 freesurfer 需要，可以去 https://surfer.nmr.mgh.harvard.edu/registration.html 注册。注意：即使**不做皮层重建，fMRIPrep 也需要 FreeSurfer license**（参考 https://github.com/nipreps/fmriprep/issues/1747）
 
 镜像和模板可以由 agent 在审查环境之后，由你授权下载。XCP-D 通常不强制要求 TemplateFlow，但某些配置/容器运行可能触发模板访问，因此建议预检，避免容器运行到一半才临时联网下载（容易报错）。
+
+完整版本：
+
+```text
+$fmri-process 帮我处理 /path/to/bids_dataset，conda环境用conda_env，镜像在 /path/to/images ，templateflow 在 /path/to/templateflow ，同时跑10个被试
+```
+
+完整版本（需要准备环境）：
+
+```text
+$fmri-process 帮我处理 /path/to/bids_dataset，conda环境用conda_env，帮我准备环境
+```
 
 最简单的用法：
 

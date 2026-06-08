@@ -89,10 +89,22 @@ cp -a skills/fmri-followup ~/.claude/skills/
 Other runtime prerequisites:
 
 - Container software: Apptainer or Singularity is recommended on Linux, WSL, and servers. Native Windows environments use Docker.
-- `datalad` and `git-annex`: used to confirm that TemplateFlow template files have been fully downloaded. You can ask the agent to install them.
+- `datalad` and `git-annex`: used to confirm that TemplateFlow template files have been fully downloaded. You can ask the agent to install them. We recommend installing them in the same conda environment you use for these skills.
 - FreeSurfer license: fMRIPrep needs this for FreeSurfer. Register at https://surfer.nmr.mgh.harvard.edu/registration.html. Note: fMRIPrep needs a FreeSurfer license even if you do not run surface reconstruction. See https://github.com/nipreps/fmriprep/issues/1747.
 
 Images and templates can be downloaded by the agent after the runtime audit and after you authorize preparation. XCP-D usually does not require TemplateFlow, but some configuration/container runs may trigger template access, so preflight is recommended. This avoids the container trying to download templates during the run, which is more likely to fail.
+
+Full version:
+
+```text
+$fmri-process help me process /path/to/bids_dataset, use conda_env as the conda environment, the image is in /path/to/images, TemplateFlow is in /path/to/templateflow, and run 10 subjects at the same time
+```
+
+Full version (needs preparation):
+
+```text
+$fmri-process help me process /path/to/bids_dataset, use conda_env as the conda environment, and help me prepare the environment
+```
 
 Simplest use:
 
