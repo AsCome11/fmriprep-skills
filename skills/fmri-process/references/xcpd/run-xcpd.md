@@ -65,6 +65,11 @@ flags. Do not pass `--reuse-context-from` to `run-xcpd`.
 Current-turn subject, session, reuse-context, and runtime override values must
 not change saved execution. If any of those values need to change, rerun
 `xcpd-audit`.
+If the fMRIPrep context, harness-trace-derived scope, TemplateFlow home, or
+TemplateFlow tool bin should change, rerun `xcpd-audit` with those values.
+Do not add `--reuse-context-from`, `--templateflow-home`, or new
+`--templateflow-tool-bin` values at `run-xcpd` to repair or replace the saved
+XCP-D artifacts.
 
 XCP-D custom args must be added during the fresh `xcpd-audit` step with
 `--xcpd-custom-arg key=value`; read [custom-args.md](custom-args.md) before

@@ -51,14 +51,29 @@ XCP-D custom args in config must be translated into repeatable
 
 ```bash
 python -m fmri_process.cli xcpd-audit \
-  --fmriprep-derivatives <fmriprep-derivatives> \
-  --output-root <output-root> \
+  --fmriprep-derivatives <bids-root>/derivatives/fmriprep \
+  --output-root <bids-root>/derivatives/xcp_d \
   --reuse-context-from <fmriprep-audit-id> \
+  --templateflow-home <templateflow-home> \
+  --templateflow-tool-bin <bin-dir> \
   --subject <selector> \
   --xcpd-mode abcd \
   --xcpd-custom-arg smoothing=4 \
   --xcpd-custom-arg low_mem=true
 ```
+
+When the user names `<bids-root>/derivatives/fmriprep`, treat it as the
+fMRIPrep derivatives subtree inside a BIDS derivatives tree. If the same
+dataset has a fMRIPrep audit or harness trace, strongly prefer reusing that
+context with `--reuse-context-from <fmriprep-audit-id>` while still writing
+fresh XCP-D artifacts.
+
+Strongly prefer adding `--templateflow-home` and
+`--templateflow-tool-bin <bin-dir>` when those values are known, especially
+when they were already proven by the fMRIPrep audit. Omitted or unverified
+TemplateFlow remains an XCP-D warning by default, not an input blocker, unless
+the user supplied TemplateFlow proof inputs or a saved signature requires
+validation.
 
 Translate config custom args into the same CLI form:
 
@@ -76,10 +91,11 @@ args. After the fresh audit is ready, `run-xcpd` consumes the saved
 saved execution.
 
 Raw `--bids-root` is optional XCP-D context when
-`--fmriprep-derivatives` is provided. Add `--fs-license`,
-`--templateflow-home`, `--templateflow-tool-bin`, or `--xcpd-image` only when
-the user supplied those runtime assets or wants the audit to validate a saved
-signature against them.
+`--fmriprep-derivatives` is provided. Add `--fs-license` or `--xcpd-image` only
+when the user supplied those runtime assets or wants the audit to validate a
+saved signature against them. Add known TemplateFlow values when available so
+the audit can validate and later bind the intended TemplateFlow cache instead
+of relying on the container-default cache.
 
 Read [xcpd-args.md](xcpd-args.md#gate-categories) before explaining blockers.
 Do not call TemplateFlow or omitted FreeSurfer license an XCP-D input blocker.

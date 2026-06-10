@@ -13,25 +13,34 @@ saved artifact selection, or execution.
 1. Use `normalized_args` from the parent path preflight when it ran. If the
    user adds new path-like or omitted runtime input, return to the parent
    preflight guard before assembling XCP-D CLI commands.
-2. Read [artifacts.md](artifacts.md) for XCP-D artifact boundaries.
-3. Read [../common/arguments.md](../common/arguments.md) and
+2. If the user asks to run XCP-D on `<bids_root>/derivatives/fmriprep`, treat
+   that path as the fMRIPrep derivatives subtree inside the BIDS derivatives
+   tree, not as a malformed non-BIDS output root. Prefer the same dataset
+   harness trace when it exists so selectors, paths, status evidence, and
+   prior findings carry forward.
+3. Read [artifacts.md](artifacts.md) for XCP-D artifact boundaries.
+4. If a same-dataset fMRIPrep audit is available, prefer
+   `xcpd-audit --reuse-context-from <fmriprep-audit-id>` to seed locator,
+   runtime, subject, and shared proof context. This is reuse of known context,
+   not XCP-D readiness.
+5. Read [../common/arguments.md](../common/arguments.md) and
    [xcpd-args.md](xcpd-args.md) before command assembly.
-4. Read [xcpd-audit.md](xcpd-audit.md) before `xcpd-audit`, unless the user
+6. Read [xcpd-audit.md](xcpd-audit.md) before `xcpd-audit`, unless the user
    explicitly asks to reuse saved XCP-D artifacts. By default, run
    `xcpd-audit`, report the result, and pause.
    When audit artifacts or payload findings need a user-facing report, read
    [../common/audit-report.md](../common/audit-report.md).
-5. If runtime prepare is needed, report the listed XCP-D requirements and ask
+7. If runtime prepare is needed, report the listed XCP-D requirements and ask
    for current-turn prepare approval. Prepare only after that approval, then
    run `prepare-probe --target xcpd`. When `prepare-probe` reports ready,
    rerun `xcpd-audit`.
-6. Treat ready saved XCP-D dataset and runtime artifacts as run candidates.
+8. Treat ready saved XCP-D dataset and runtime artifacts as run candidates.
    Run `run-xcpd` in the same turn only when the user explicitly approved
    execution after audit passes.
-7. After successful execution, use
+9. After successful execution, use
    [../common/execution-report.md](../common/execution-report.md) for the final
    user reply.
-8. Route post-launch inspection to `$fmri-followup`.
+10. Route post-launch inspection to `$fmri-followup`.
 
 ## State Table
 
@@ -51,6 +60,10 @@ saved artifact selection, or execution.
   `xcpd-dataset-audit-debug.json` internally.
 - `xcpd-audit --reuse-context-from <audit>` may seed locator/runtime context
   from fMRIPrep artifacts. It is not XCP-D readiness proof.
+- Reuse possible fMRIPrep artifacts first: the same dataset harness trace,
+  saved fMRIPrep audit context, and ready shared runtime proofs may reduce
+  repeated discovery. They never replace fresh XCP-D dataset and runtime
+  artifacts.
 - `run-xcpd` consumes saved XCP-D artifacts only; this is the saved-artifact
   execution contract. Runtime-looking current-turn values may validate a saved
   signature only; they must not replace it.
