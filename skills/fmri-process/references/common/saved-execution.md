@@ -43,6 +43,13 @@ This manual container fallback requires explicit user approval and must not be
 used before both retries have failed. Do not start the manual container command
 automatically.
 
+Manual container fallback has no saved `submission_id`. After launch, route
+status/debug work to `$fmri-followup`; `run-status` is not authoritative for
+the manual process. Use only bounded PID, scheduler job, log, output, or crash
+evidence supplied or approved by the user. Write the harness trace with
+`submission_id=none` and the evidence phrase `manual container fallback; no
+saved submission id; run-status is not authoritative`.
+
 ## Artifact Stability
 
 Saved execution is artifact-only. It consumes archived audit artifacts and must

@@ -64,6 +64,8 @@ $fmri-followup 监测进度、日志、崩溃记录和输出完整性
 
 ### 安装依赖
 
+Linux、macOS、WSL 或远程 shell：
+
 ```bash
 if [ -d fmriprep-skills/.git ]; then
   cd fmriprep-skills
@@ -72,6 +74,20 @@ else
   git clone https://github.com/Ascom11/fmriprep-skills.git
   cd fmriprep-skills
 fi
+python -m pip install -e .
+python -m pip show fmri-proc-tools
+```
+
+Windows PowerShell：
+
+```powershell
+if (Test-Path ".\fmriprep-skills\.git") {
+  Set-Location ".\fmriprep-skills"
+  git pull --ff-only
+} else {
+  git clone https://github.com/Ascom11/fmriprep-skills.git
+  Set-Location ".\fmriprep-skills"
+}
 python -m pip install -e .
 python -m pip show fmri-proc-tools
 ```

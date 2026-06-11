@@ -16,6 +16,7 @@ REMOTE_PATH_PROBE_TIMEOUT_SECONDS = 20
 REMOTE_MARKER = "__fmri_path_probe__:"
 IMAGE_REF_PREFIXES = ("docker://", "library://", "oras://", "http://", "https://")
 VALID_PIPELINES = {"fmriprep", "xcpd"}
+TARGET_OUTPUT_ROOT_LEAVES = {"fmriprep", "xcp_d"}
 FMRIPREP_PATH_NAMES = {"dataset", "output_root", "templateflow_home", "fs_license", "fmriprep_image"}
 XCPD_PATH_NAMES = {"bids_root", "fmriprep_derivatives", "output_root", "templateflow_home", "fs_license", "xcpd_image"}
 XCPD_REQUIRED_PATH_NAMES = {"fmriprep_derivatives", "output_root"}
@@ -63,6 +64,7 @@ def run_path_probe(
             xcpd_image=xcpd_image,
             required_paths=required,
         )
+    output_root = _normalize_output_root_target_leaf(output_root)
     raw_matches = _collect_matches(
         host_target=host_target,
         remote_host=remote_host,
@@ -137,7 +139,9 @@ def _run_xcpd_path_probe(
     required_paths: set[str],
 ) -> dict[str, Any]:
     xcpd_bids_root = bids_root or _bids_root_from_fmriprep_derivatives_hint(user_dataset_path)
-    xcpd_output_root = output_root or _output_root_from_fmriprep_derivatives_hint(user_dataset_path)
+    xcpd_output_root = _normalize_output_root_target_leaf(output_root) or _output_root_from_fmriprep_derivatives_hint(
+        user_dataset_path
+    )
     dataset_values = _xcpd_dataset_values(bids_root, user_dataset_path)
     explicit_fmriprep_derivatives = "fmriprep_derivatives" in required_paths and user_dataset_path is not None
     fmriprep_derivatives_hint = (
@@ -391,6 +395,17 @@ def _download_roots(
 def _path_obj(value: str | Path | PurePosixPath) -> Path | PurePosixPath:
     raw = str(value)
     return PurePosixPath(raw) if raw.startswith("/") else Path(raw)
+
+
+def _normalize_output_root_target_leaf(
+    value: str | Path | PurePosixPath | None,
+) -> str | Path | PurePosixPath | None:
+    if value is None:
+        return None
+    path = _path_obj(value)
+    if path.name in TARGET_OUTPUT_ROOT_LEAVES and path.parent.name == "derivatives":
+        return str(path.parent)
+    return value
 
 
 def _child_path(value: str | Path | PurePosixPath, *parts: str) -> str:

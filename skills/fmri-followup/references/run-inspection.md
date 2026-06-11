@@ -84,7 +84,8 @@ exact and `run-status` must ask for `--submission-id`.
 archive; otherwise `run-status` must ask for `--audit-id`.
 
 Omit `--remote-host` only for local runs. Treat the JSON result as primary
-monitoring evidence. After `run-status` returns, append a short entry to
+monitoring evidence for saved submissions. After `run-status` or a manual
+container probe returns, append a short entry to
 `<dataset-output-root>/_artifacts/harness-trace.md` with target, selector,
 status, compact evidence, and next action.
 
@@ -107,6 +108,22 @@ with manual crash or log probes from another audit directory.
 
 If recovery or re-audit creates a new audit id, switch the selector to that new
 id before continuing inspection.
+
+## Manual Container Fallback
+
+A hand-written container fallback has no saved `submission_id`. In that case,
+`run-status` cannot prove the real state of that manual process because it only
+knows saved submissions. Do not mix the latest saved `submission_id` into
+manual container evidence.
+
+Use only bounded PID, scheduler job, log, output, and crash probes that the
+user supplied or approved. Classify status only from current evidence:
+`unknown`, `running`, `failed`, or `completed`. Record the trace entry with
+`submission_id=none`, and include this evidence phrase:
+
+```text
+manual container fallback; no saved submission id; run-status is not authoritative
+```
 
 ## Parameter Details
 

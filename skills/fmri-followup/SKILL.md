@@ -56,6 +56,9 @@ recover or create the single dataset harness trace before `run-status` or
 manual probes. Use the fMRI-process
 [harness trace guide](../fmri-process/references/common/harness-trace.md) for
 path, template, append, compaction, correction, and boundary rules.
+Progress, status, and debug work must start from that recovered trace when the
+output root is known. Append compact evidence after manual probes too; trace is
+not only a `run-status` after-action.
 
 ## Stage Boundary
 

@@ -52,7 +52,7 @@ XCP-D custom args in config must be translated into repeatable
 ```bash
 python -m fmri_process.cli xcpd-audit \
   --fmriprep-derivatives <bids-root>/derivatives/fmriprep \
-  --output-root <bids-root>/derivatives/xcp_d \
+  --output-root <bids-root>/derivatives \
   --reuse-context-from <fmriprep-audit-id> \
   --templateflow-home <templateflow-home> \
   --templateflow-tool-bin <bin-dir> \

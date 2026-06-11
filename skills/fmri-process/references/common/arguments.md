@@ -13,7 +13,7 @@ pipeline-specific flags only.
 | --- | --- | --- |
 | `--bids-root <bids-root>` | `process`, `dataset-audit`, `runtime-audit`, `prepare-probe`, `run-fmriprep`, `xcpd-audit`, `run-xcpd`, `run-status` | Target-visible BIDS root. Required for fMRIPrep. Optional context for XCP-D when `--fmriprep-derivatives` is provided. In remote mode this is a remote POSIX path. |
 | `--fmriprep-derivatives <path>` | `xcpd-audit`, `run-xcpd` | Target-visible fMRIPrep derivatives root used as XCP-D input. This is the XCP-D dataset input when raw BIDS is not provided. |
-| `--output-root <output-root>` | `process`, `dataset-audit`, `runtime-audit`, `prepare-probe`, `run-fmriprep`, `xcpd-audit`, `run-xcpd`, `run-status` | Derivatives and audit archive root. When omitted for fMRIPrep, CLI default is `<bids_root>/derivatives`; for XCP-D with `--fmriprep-derivatives`, it defaults to the derivatives parent. |
+| `--output-root <output-root>` | `process`, `dataset-audit`, `runtime-audit`, `prepare-probe`, `run-fmriprep`, `xcpd-audit`, `run-xcpd`, `run-status` | Shared derivatives and audit archive root. When omitted for fMRIPrep, CLI default is `<bids_root>/derivatives`; for XCP-D with `--fmriprep-derivatives`, it defaults to the derivatives parent. |
 | `--remote-host <remote-host>` | `process`, `dataset-audit`, `runtime-audit`, `prepare-probe`, `run-fmriprep`, `xcpd-audit`, `run-xcpd`, `run-status` | Run the CLI locally while probes/execution target the remote filesystem/runtime. |
 | `--subject <selector>` | `process`, `dataset-audit`, `xcpd-audit` | Repeatable subject selector. Preserve user scope; do not widen after path correction. |
 | `--subject-file <subject-file>` | `process`, `dataset-audit`, `xcpd-audit` | Local CLI-side selector file, even with `--remote-host`. |
@@ -149,6 +149,13 @@ Use CLI payloads for exact resolved defaults. Agent-facing defaults:
   `<output-root>.parent/_downloads`
 - default image root: `<download_root>/images`
 - TemplateFlow home: `<download_root>/templateflow`
+
+`--output-root` is the shared derivatives root. Path preflight must normalize a
+user-supplied target leaf such as `.../derivatives/fmriprep` or
+`.../derivatives/xcp_d` to `.../derivatives` before workflow commands. Later
+workflow commands consume the explicit value they receive; they do not
+reinterpret target leaf paths. The preflight correction prevents
+`derivatives/<target>/<target>` nesting.
 
 `--download-root <download-root>` overrides the derived download root.
 Saved execution consumes values recorded in selected artifacts. Current-turn

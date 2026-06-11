@@ -37,10 +37,16 @@ reuse prior selectors, status evidence, paths, and findings.
 - Wrap Markdown-sensitive tokens in backticks, including skill names such as
   `$fmri-process`, `$fmri-followup`, route names, CLI flags, command names,
   schema keys, status tokens, and paths.
-- After every `run-status`, write one short `Status Log` entry summarizing the
-  JSON result. Keep only the first and latest two `run-status` entries per
-  target so fMRIPrep context remains available when XCP-D monitoring starts.
-  Move important intermediate transitions into `Findings`.
+- After every `run-status` or manual container probe, write one short
+  `Status Log` entry summarizing the result. Keep only the first and latest
+  two `run-status` entries per target so fMRIPrep context remains available
+  when XCP-D monitoring starts. Move important intermediate transitions into
+  `Findings`.
+- For manual container fallback with no saved submission, write
+  `submission_id=none`. Use only a status supported by PID, scheduler, log,
+  output, or crash evidence: `unknown`, `running`, `failed`, or `completed`.
+  Evidence must say `manual container fallback; no saved submission id;
+  run-status is not authoritative`.
 - When the user corrects path, scope, selector, status interpretation, or
   workflow constraints, append a `user-correction` entry before acting on the
   corrected instruction.

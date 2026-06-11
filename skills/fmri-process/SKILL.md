@@ -15,7 +15,7 @@ If the user only asks for logs, scheduler state, outputs, crashes, or run status
 
 ## Quick Start
 
-At the start of a real audit, prepare, continuation, or execution request, do a preliminary route classification. For a new same-dataset thread/session, including after context compaction, locate the output root and read or create the single dataset trace before install checks or workflow commands; use [references/common/harness-trace.md](references/common/harness-trace.md) for trace rules. Then select the local Python/environment and confirm install:
+At the start of a real audit, prepare, continuation, or execution request, do a preliminary route classification. For a new same-dataset thread/session, including after context compaction, locate the output root and read or create the single dataset trace before install checks or workflow commands; use [references/common/harness-trace.md](references/common/harness-trace.md) for trace rules. Treat this trace as the workflow/status recovery point and pre-reply checklist for that dataset. Then select the local Python/environment and confirm install:
 
 ```bash
 python -m pip show fmri-proc-tools
@@ -83,9 +83,11 @@ Load [references/common/audit-report.md](references/common/audit-report.md) only
 - fMRIPrep and XCP-D readiness stay separate. fMRIPrep artifacts may seed XCP-D context, but fresh XCP-D artifacts are still required before `run-xcpd`.
 - fMRIPrep never auto-routes to XCP-D after `run-fmriprep`; require explicit user intent.
 - Before any user-facing report or reply, confirm the same-dataset harness trace
-  has been created and the current action, status, or user correction has been
-  appended when applicable. If it is missing or stale, update it with the
-  harness trace guide before replying.
+  has been created and the current action, status, manual probe evidence, or
+  user correction has been appended when applicable. If it is missing or stale,
+  update it with the harness trace guide before replying. Prefer trace
+  read/write before workflow or status commands whenever the output root is
+  known; ordinary updates append without rereading the whole trace.
 - If the selected route contract or CLI payload is ambiguous, stop and explain the ambiguity. If the CLI reports a hard stop, do not bypass it.
 - Default source boundary: do not open, read, inspect, or edit package source
   files by default. The agent must not read or modify Python implementation

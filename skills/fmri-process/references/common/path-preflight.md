@@ -82,7 +82,7 @@ route.
 | `--target xcpd` | XCP-D routes | Select XCP-D path categories. |
 | `--bids-root <bids_root>` | user supplied BIDS root | Target-visible BIDS root. In remote mode this is a remote POSIX path. |
 | `--user-dataset-path <path>` | user gave a dataset-like path that may need correction | Candidate dataset root, parent directory, or XCP-D fMRIPrep derivatives hint. |
-| `--output-root <output_root>` | user supplied output root | Target-visible output root. |
+| `--output-root <output_root>` | user supplied output root | Target-visible shared derivatives root. |
 | `--templateflow-home <path>` | user supplied TemplateFlow path or parent | Candidate TemplateFlow directory. |
 | `--fs-license <fs_license>` | user supplied FreeSurfer license | Target-visible license path. |
 | `--fmriprep-image <image>` | fMRIPrep route with supplied image | fMRIPrep image path or registry reference. |
@@ -106,6 +106,12 @@ conversion of strict `/mnt/<single-letter-drive>/...` values to
 `<DRIVE>:\...` only for local native Windows requests. Remote `--remote-host`
 requests keep `/mnt/<drive>/...` as POSIX paths. fMRIPrep image references
 remain strings.
+
+`--output-root` is the shared derivatives root, not the target product
+directory. If the user gives `.../derivatives/fmriprep` or
+`.../derivatives/xcp_d`, normalize it to `.../derivatives` before the next
+workflow CLI command. This avoids nested `derivatives/<target>/<target>`
+output paths.
 
 For runtime-capable fMRIPrep routes, require applicable runtime assets:
 `fs_license`, `fmriprep_image`, and `templateflow_home`. For XCP-D, pass
