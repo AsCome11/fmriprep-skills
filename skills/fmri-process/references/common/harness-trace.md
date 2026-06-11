@@ -91,6 +91,10 @@ redirection, or other Markdown-sensitive characters.
 
 The helper is stdlib-only; no `PYTHONPATH` is required. Use an explicit script
 path because cwd may not be the fmri-process skill directory.
+For remote appends, the helper defaults to remote `python`. If that is older or
+different from the workflow environment, set either `--remote-python` or the
+local environment variable `FMRIPREP_SKILLS_REMOTE_PYTHON` to the target-visible
+remote interpreter, for example a `ycxu_new` Python 3.11 binary.
 
 Local or native Windows runs:
 
@@ -114,6 +118,7 @@ the fMRI CLI still runs locally.
 ```bash
 python <fmri-process-skill-dir>/references/common/append-harness-trace.py \
   --remote-host "<remote-host>" \
+  --remote-python "<remote-python|python>" \
   --trace-path "<dataset-output-root>/_artifacts/harness-trace.md" \
   --entry-kind run-status \
   --target "<fmriprep|xcpd>" \

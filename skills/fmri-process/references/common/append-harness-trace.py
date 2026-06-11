@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shlex
 import subprocess
 from datetime import datetime, timezone
@@ -12,13 +13,14 @@ from pathlib import Path
 
 SIZE_LIMIT_BYTES = 50 * 1024
 TRACE_HEADER = "# Harness Trace\n\n"
+REMOTE_PYTHON_ENV = "FMRIPREP_SKILLS_REMOTE_PYTHON"
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Append one harness trace entry.")
     parser.add_argument("--trace-path", required=True)
     parser.add_argument("--remote-host")
-    parser.add_argument("--remote-python", default="python")
+    parser.add_argument("--remote-python")
     parser.add_argument("--entry-kind", choices=("init", "run-status", "user-correction"), required=True)
     parser.add_argument("--timestamp")
     parser.add_argument("--raw")
@@ -40,7 +42,8 @@ def main() -> int:
 
     text = build_entry(args)
     if args.remote_host:
-        append_remote(args.remote_host, args.remote_python, args.trace_path, args.entry_kind, text)
+        remote_python = args.remote_python or os.environ.get(REMOTE_PYTHON_ENV, "python")
+        append_remote(args.remote_host, remote_python, args.trace_path, args.entry_kind, text)
     else:
         append_local(Path(args.trace_path), args.entry_kind, text)
     return 0
@@ -128,7 +131,8 @@ def append_run_status_local(trace: Path, text: str) -> None:
         existing += "\n"
     compacted = trim_run_status_entries(existing + text)
     tmp = trace.with_suffix(trace.suffix + ".tmp")
-    tmp.write_text(compacted, encoding="utf-8", newline="\n")
+    with tmp.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(compacted)
     tmp.replace(trace)
     if _entry_status(text) == "completed" or len(compacted.encode("utf-8")) > SIZE_LIMIT_BYTES:
         raise SystemExit("spawn subagent to compact trace")
@@ -247,7 +251,8 @@ if entry_kind == "run-status":
         existing += "\\n"
     compacted = trim_run_status_entries(existing + text)
     tmp = p.with_suffix(p.suffix + ".tmp")
-    tmp.write_text(compacted, encoding="utf-8", newline="\\n")
+    with tmp.open("w", encoding="utf-8", newline="\\n") as handle:
+        handle.write(compacted)
     tmp.replace(p)
     if entry_status(text) == "completed" or len(compacted.encode("utf-8")) > SIZE_LIMIT_BYTES:
         raise SystemExit("spawn subagent to compact trace")
